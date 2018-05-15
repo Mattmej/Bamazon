@@ -19,18 +19,9 @@ connection.connect(function(error) {
 });
 
 function afterConnection() {
-    // connection.query("SELECT * FROM products", function(error, response) {
-    //     if (error) throw error;
-    //     // console.log("\n" + columnify(response));
-    //     console.log(response);
-    //     promptUser();
-    //     connection.end();
-    // })
 
-    // checkItemId(3123);
-    // promptUser();
     idPrompt();
-    // connection.end();
+
 }
 
 function idPrompt() {
@@ -39,20 +30,12 @@ function idPrompt() {
             type: "input",
             message: "Enter the ID of the product you wish to buy.",
             name: "userIdChoice"
-        },
-
-        // {
-        //     type: "input",
-        //     message: "How many units would you like to buy?",
-        //     name: "userProductNumber"
-        // }
+        }
 
     ])
     .then(function(response) {
-        // checkItemId(response1.userIdChoice);
         connection.query("SELECT * FROM products WHERE item_id=" + response.userIdChoice, function(error, response2) {
             if (error) throw error;
-            // console.log(response);
             console.log(Object.values(response2[0]));
             console.log(response.userIdChoice);
     
@@ -70,34 +53,7 @@ function idPrompt() {
     })
 }
 
-// function checkItemId(ID) {
-//     connection.query("SELECT * FROM products WHERE item_id=" + ID, function(error, response2) {
-//         if (error) throw error;
-//         // console.log(response);
-//         // console.log(Object.values(response2[0]));
 
-//         if (Object.values(response2[0]).includes(ID)) {
-//             // console.log(response2)
-//             checkItemQuantity(response2[0], itemNumber);
-//         }
-
-//         else {
-//             console.log("Item not found!");
-//             connection.end();
-//         }
-//     })
-// }
-
-// function checkItemQuantity(product, itemNumber) {
-//     if (itemNumber > product.stock_quantity) {
-//         console.log("Insufficient Quantity!");
-//     }
-
-//     else {
-//         console.log("Order went through!");
-//     }
-//     connection.end();
-// }
 
 function itemNumberPrompt(product) {
     inquirer.prompt([
