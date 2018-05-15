@@ -28,11 +28,12 @@ function afterConnection() {
     // })
 
     // checkItemId(3123);
-    promptUser();
+    // promptUser();
+    idPrompt();
     // connection.end();
 }
 
-function promptUser() {
+function idPrompt() {
     inquirer.prompt([
         {
             type: "input",
@@ -40,43 +41,81 @@ function promptUser() {
             name: "userIdChoice"
         },
 
+        // {
+        //     type: "input",
+        //     message: "How many units would you like to buy?",
+        //     name: "userProductNumber"
+        // }
+
+    ])
+    .then(function(response) {
+        // checkItemId(response1.userIdChoice);
+        connection.query("SELECT * FROM products WHERE item_id=" + response.userIdChoice, function(error, response2) {
+            if (error) throw error;
+            // console.log(response);
+            console.log(Object.values(response2[0]));
+            console.log(response.userIdChoice);
+    
+            if (Object.values(response2[0]).includes(parseInt(response.userIdChoice))) {
+                // console.log(response2)
+                // checkItemQuantity(response2[0], itemNumber);
+                itemNumberPrompt(response2[0]);
+            }
+    
+            else {
+                console.log("Item not found!");
+                connection.end();
+            }
+        })
+    })
+}
+
+// function checkItemId(ID) {
+//     connection.query("SELECT * FROM products WHERE item_id=" + ID, function(error, response2) {
+//         if (error) throw error;
+//         // console.log(response);
+//         // console.log(Object.values(response2[0]));
+
+//         if (Object.values(response2[0]).includes(ID)) {
+//             // console.log(response2)
+//             checkItemQuantity(response2[0], itemNumber);
+//         }
+
+//         else {
+//             console.log("Item not found!");
+//             connection.end();
+//         }
+//     })
+// }
+
+// function checkItemQuantity(product, itemNumber) {
+//     if (itemNumber > product.stock_quantity) {
+//         console.log("Insufficient Quantity!");
+//     }
+
+//     else {
+//         console.log("Order went through!");
+//     }
+//     connection.end();
+// }
+
+function itemNumberPrompt(product) {
+    inquirer.prompt([
         {
             type: "input",
             message: "How many units would you like to buy?",
             name: "userProductNumber"
         }
-
     ])
-    .then(function(response1) {
-        checkItemId(response1.userIdChoice, response1.userProductNumber);
-    })
-}
-
-function checkItemId(ID, itemNumber) {
-    connection.query("SELECT * FROM products WHERE item_id=" + ID, function(error, response2) {
-        if (error) throw error;
-        // console.log(response);
-        // console.log(Object.values(response2[0]));
-
-        if (Object.values(response2[0]).includes(ID)) {
-            // console.log(response2)
-            checkItemQuantity(response2[0], itemNumber);
+    .then(function(response) {
+        if (response.userProductNumber > product.stock_quantity) {
+            console.log("Insufficient Quantity!");
         }
 
         else {
-            console.log("Item not found!");
-            connection.end();
+            console.log("Order went through!");
         }
+
+        connection.end();
     })
-}
-
-function checkItemQuantity(product, itemNumber) {
-    if (itemNumber > product.stock_quantity) {
-        console.log("Insufficient Quantity!");
-    }
-
-    else {
-        console.log("Order went through!");
-    }
-    connection.end();
 }
