@@ -27,8 +27,9 @@ function afterConnection() {
     //     connection.end();
     // })
 
-    checkItemId(3123);
-    connection.end();
+    // checkItemId(3123);
+    promptUser();
+    // connection.end();
 }
 
 function promptUser() {
@@ -46,23 +47,36 @@ function promptUser() {
         }
 
     ])
-    .then(function(response) {
-        checkItemId(response.userIdChoice);
+    .then(function(response1) {
+        checkItemId(response1.userIdChoice, response1.userProductNumber);
     })
 }
 
-function checkItemId(ID) {
-    connection.query("SELECT * FROM products WHERE item_id=" + ID, function(error, response) {
+function checkItemId(ID, itemNumber) {
+    connection.query("SELECT * FROM products WHERE item_id=" + ID, function(error, response2) {
         if (error) throw error;
         // console.log(response);
-        console.log(Object.values(response[0]));
+        // console.log(Object.values(response2[0]));
 
-        if (Object.values(response[0]).includes(ID)) {
-            // console.log(response)
+        if (Object.values(response2[0]).includes(ID)) {
+            // console.log(response2)
+            checkItemQuantity(response2[0], itemNumber);
         }
 
         else {
             console.log("Item not found!");
+            connection.end();
         }
     })
+}
+
+function checkItemQuantity(product, itemNumber) {
+    if (itemNumber > product.stock_quantity) {
+        console.log("Insufficient Quantity!");
+    }
+
+    else {
+        console.log("Order went through!");
+    }
+    connection.end();
 }
