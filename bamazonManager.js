@@ -90,17 +90,26 @@ function addToInventory() {
             connection.query("SELECT * FROM products WHERE item_id=" + response.restockedItem, function (error, response2) {
                 if (error) throw error;
 
-                console.log(response2);
-                console.log("\nItem Selected: " + response2[0].product_name);
+                // console.log(response2);
 
-                if (Object.values(response2[0]).includes(parseInt(response.restockedItem))) {
-                    // restock(response2, response.restockedItem);
-                    restock(response.restockedItem);
+                // if (Object.values(response2[0]).includes(parseInt(response.restockedItem))) {
+                //     // restock(response2, response.restockedItem);
+                //     restock(response.restockedItem);
+                // }
+
+                // else {
+                //     console.log("Item not found!");
+                //     connection.end();
+                // }
+
+                if (response2.length === 0) {
+                    console.log("\nItem not found!");
+                    connection.end();
                 }
 
                 else {
-                    console.log("Item not found!");
-                    connection.end();
+                    console.log("\nItem Selected: " + response2[0].product_name);
+                    restock(response.restockedItem);
                 }
             })
         })
