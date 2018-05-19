@@ -69,16 +69,6 @@ function viewLowInventory() {
 function addToInventory() {
     viewProducts();
 
-    // connection.query("SELECT * FROM products", function(error, response) {
-    //     if (error) throw error;
-    //     console.log("\n" + columnify(response));
-    //     connection.end();
-    // });
-
-
-
-
-
     console.log("\n");
     inquirer.prompt([
         {
@@ -174,28 +164,6 @@ function addNewProduct() {
 
             assignId(response.addedProduct, response.numberOfProducts, response.productDepartment, response.productPrice);
 
-            // connection.query("SELECT item_id FROM products", function(error, response) {
-            //     if (error) throw error;
-            //     // console.log(response);
-
-            //     // finishAddProduct(response);
-            //     // assignId(response);
-            //     // idList = response;
-            // })
-
-            // console.log("Assign ID: " + assignId());
-
-            
-            // // assignId();
-            // const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(assignId()) + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
-            // console.log(INSERT)
-            // connection.query(INSERT, function (error, response2) {
-            //     if (error) throw error;
-
-            //     // console.log(INSERT);
-            //     console.log("Product Added!");
-            //     connection.end();
-            // })
             
         })
 }
@@ -212,20 +180,14 @@ function assignId(product, quantity, department, price) {
         for (i = 0; i < response.length; i++) {
             idValueArray.push(response[i].item_id);
         }
-        // console.log(randomId);
-        // console.log(idArray);
-        // console.log(Object.values(idArray));
-        // console.log(idValueArray);
+        
 
         if (idValueArray.includes(randomId)) {
             // finishAddProduct(randomId);
             assignId();
         }
 
-        // else {
-        //     // assignId(idArray);
-        //     finishAddProduct(randomId);
-        // }
+
         else {
             // return randomId;
             console.log("Quantity: " + quantity);
@@ -236,19 +198,7 @@ function assignId(product, quantity, department, price) {
     
 }
 
-// function finishAddProduct(randomId) {
-//     const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" 
-//         randomId + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
-        
-//     connection.query(INSERT, function (error, response) {
-//         if (error) throw error;
 
-//         console.log(INSERT);
-//         console.log("Product Added!");
-//         connection.end();
-//     })
-
-// }
 
 function finishAddProduct(randomId, product, quantity, department, price) {
     const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(randomId) + ", '" + product + "', '" + department + "', " + parseInt(price).toFixed(2) + ", " + parseInt(quantity) + ")";
@@ -289,19 +239,3 @@ function finishAddProduct(randomId, product, quantity, department, price) {
 //             // // console.log(idList);
             
 
-
-
-
-
-
-//             connection.query("INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (1234, 'Tweezers', 'Target', 1.00, 50)", function(error, response) {
-//                 if (error) throw error;
-//                 console.log("Product Added!");
-//             })
-//         }
-//     })
-// }
-
-// function assignId() {
-
-// }
