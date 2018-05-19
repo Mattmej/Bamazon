@@ -61,7 +61,14 @@ function viewProducts() {
 function viewLowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quantity<5", function (error, response) {
         if (error) throw error;
-        console.log("\n" + columnify(response));
+        // console.log(response);
+        if (response.length === 0) {
+            console.log("No low inventory!");
+        }
+
+        else {
+            console.log("\n" + columnify(response));
+        }
         connection.end();
     })
 }
@@ -73,7 +80,7 @@ function addToInventory() {
     inquirer.prompt([
         {
             type: "input",
-            message: "Select an item ID for the product you wish to restock. \n",
+            message: "Select an item ID for the product you wish to restock.",
             name: "restockedItem"   // the item id that user wishes to restock.
         }
     ])
@@ -84,6 +91,7 @@ function addToInventory() {
                 if (error) throw error;
 
                 console.log(response2);
+                console.log("\nItem Selected: " + response2[0].product_name);
 
                 if (Object.values(response2[0]).includes(parseInt(response.restockedItem))) {
                     // restock(response2, response.restockedItem);
@@ -190,7 +198,7 @@ function assignId(product, quantity, department, price) {
 
         else {
             // return randomId;
-            console.log("Quantity: " + quantity);
+            // console.log("Quantity: " + quantity);
             finishAddProduct(randomId, product, quantity, department, price);
         }
        
@@ -202,7 +210,7 @@ function assignId(product, quantity, department, price) {
 
 function finishAddProduct(randomId, product, quantity, department, price) {
     const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(randomId) + ", '" + product + "', '" + department + "', " + parseInt(price).toFixed(2) + ", " + parseInt(quantity) + ")";
-    console.log(INSERT)
+    // console.log(INSERT)
     connection.query(INSERT, function (error, response2) {
         if (error) throw error;
 
