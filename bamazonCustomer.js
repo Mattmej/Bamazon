@@ -41,11 +41,9 @@ function idPrompt() {
         connection.query("SELECT * FROM products WHERE item_id=" + response.userIdChoice, function(error, response2) {
             if (error) throw error;
             console.log("\nItem Selected: " + Object.values(response2[0])[1]);
-            // console.log(response.userIdChoice);
     
             if (Object.values(response2[0]).includes(parseInt(response.userIdChoice))) {
-                // console.log(response2)
-                // checkItemQuantity(response2[0], itemNumber);
+
                 itemNumberPrompt(response2[0]);
             }
     
@@ -74,11 +72,9 @@ function itemNumberPrompt(product) {
         }
 
         else {
-            // console.log("Order went through!");
             fulfillOrder(product, response.userProductNumber);
         }
 
-        // connection.end();
     })
 }
 
