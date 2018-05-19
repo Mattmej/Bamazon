@@ -124,8 +124,11 @@ function restock(item_id) {
         {
             type: "input",
             message: "How many items would you like to add?",
-            name: "numberRestocked"
-        }
+            name: "numberRestocked",
+            validate: function (name) {
+                return name !== "";
+            }
+        }   
     ])
         .then(function (response) {
             connection.query("UPDATE products SET stock_quantity=stock_quantity+" + parseInt(response.numberRestocked) + " WHERE item_id=" + parseInt(item_id), function (error, response2) {
