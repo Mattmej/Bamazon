@@ -170,8 +170,9 @@ function addNewProduct() {
     ])
         .then(function (response) {
 
+            // console.log(response.)
 
-            assignId();
+            assignId(response.addedProduct, response.numberOfProducts, response.productDepartment, response.productPrice);
 
             // connection.query("SELECT item_id FROM products", function(error, response) {
             //     if (error) throw error;
@@ -182,25 +183,25 @@ function addNewProduct() {
             //     // idList = response;
             // })
 
-            console.log("Assign ID: " + assignId());
+            // console.log("Assign ID: " + assignId());
 
             
-            // assignId();
-            const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(assignId()) + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
-            console.log(INSERT)
-            connection.query(INSERT, function (error, response2) {
-                if (error) throw error;
+            // // assignId();
+            // const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(assignId()) + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
+            // console.log(INSERT)
+            // connection.query(INSERT, function (error, response2) {
+            //     if (error) throw error;
 
-                // console.log(INSERT);
-                console.log("Product Added!");
-                connection.end();
-            })
+            //     // console.log(INSERT);
+            //     console.log("Product Added!");
+            //     connection.end();
+            // })
             
         })
 }
 
 // Assign a random id to the added product
-function assignId() {
+function assignId(product, quantity, department, price) {
 
     connection.query("SELECT item_id FROM products", function(error, response) {
         if (error) throw error;
@@ -226,25 +227,39 @@ function assignId() {
         //     finishAddProduct(randomId);
         // }
         else {
-            return randomId;
+            // return randomId;
+            console.log("Quantity: " + quantity);
+            finishAddProduct(randomId, product, quantity, department, price);
         }
        
     })
     
 }
 
-function finishAddProduct(randomId) {
-    const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" 
-        randomId + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
+// function finishAddProduct(randomId) {
+//     const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" 
+//         randomId + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
         
-    connection.query(INSERT, function (error, response) {
+//     connection.query(INSERT, function (error, response) {
+//         if (error) throw error;
+
+//         console.log(INSERT);
+//         console.log("Product Added!");
+//         connection.end();
+//     })
+
+// }
+
+function finishAddProduct(randomId, product, quantity, department, price) {
+    const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(randomId) + ", '" + product + "', '" + department + "', " + parseInt(price).toFixed(2) + ", " + parseInt(quantity) + ")";
+    console.log(INSERT)
+    connection.query(INSERT, function (error, response2) {
         if (error) throw error;
 
-        console.log(INSERT);
+        // console.log(INSERT);
         console.log("Product Added!");
         connection.end();
     })
-
 }
 
 // function testAdd() {
