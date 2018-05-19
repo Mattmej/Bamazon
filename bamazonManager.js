@@ -2,6 +2,8 @@ var columnify = require("columnify");
 var inquirer = require("inquirer");
 var mysql = require("mysql");
 
+var randomId;
+
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -40,8 +42,8 @@ function managerPrompt() {
                     addToInventory();
                     break;
                 case "Add New Product":
-                    // addNewProduct();
-                    testAdd();
+                    addNewProduct();
+                    // testAdd();
             }
             // console.log(response.choices);
             // console.log(response);
@@ -128,78 +130,162 @@ function restock(item_id) {
         })
 }
 
-// function addNewProduct() {
-//     inquirer.prompt([
-//         {
-//             type: "input",
-//             message: "Enter the name of the product you would like to add.",
-//             name: "addedProduct",
-//             validate: function (name) {
-//                 return name !== "";
-//             }
-//         },
-
-//         {
-//             type: "input",
-//             message: "Enter the number of products you would like to add.",
-//             name: "numberOfProducts",
-//             validate: function (name) {
-//                 return name !== "";
-//             }
-//         },
-
-//         {
-//             type: "input",
-//             message: "Enter the product's department name.",
-//             name: "productDepartment",
-//             validate: function(name) {
-//                 return name !== "";
-//             }
-//         },
-
-//         {
-//             type: "input",
-//             message: "Enter the price of the product.",
-//             name: "productPrice",
-//             validate: function (name) {
-//                 return name !== "";
-//             }
-//         }
-//     ])
-//         .then(function (response) {
-            
-//             // assignId();
-//             const INSERT = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (" 
-//             + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ");";
-//             connection.query(INSERT, function (error, response) {
-//                 if (error) throw error;
-
-//                 console.log(INSERT);
-//                 console.log("Product Added!");
-//                 connection.end();
-//             })
-//         })
-// }
-
-function testAdd() {
+function addNewProduct() {
     inquirer.prompt([
         {
-        type: "confirm",
-        message: "Add test value?",
-        name: "confirmTest",
-        default: true
+            type: "input",
+            message: "Enter the name of the product you would like to add.",
+            name: "addedProduct",
+            validate: function (name) {
+                return name !== "";
+            }
+        },
+
+        {
+            type: "input",
+            message: "Enter the number of products you would like to add.",
+            name: "numberOfProducts",
+            validate: function (name) {
+                return name !== "";
+            }
+        },
+
+        {
+            type: "input",
+            message: "Enter the product's department name.",
+            name: "productDepartment",
+            validate: function(name) {
+                return name !== "";
+            }
+        },
+
+        {
+            type: "input",
+            message: "Enter the price of the product.",
+            name: "productPrice",
+            validate: function (name) {
+                return name !== "";
+            }
+        }
+    ])
+        .then(function (response) {
+
+
+            assignId();
+
+            // connection.query("SELECT item_id FROM products", function(error, response) {
+            //     if (error) throw error;
+            //     // console.log(response);
+
+            //     // finishAddProduct(response);
+            //     // assignId(response);
+            //     // idList = response;
+            // })
+
+            console.log("Assign ID: " + assignId());
+
+            
+            // assignId();
+            const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" + parseInt(assignId()) + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
+            console.log(INSERT)
+            connection.query(INSERT, function (error, response2) {
+                if (error) throw error;
+
+                // console.log(INSERT);
+                console.log("Product Added!");
+                connection.end();
+            })
+            
+        })
+}
+
+// Assign a random id to the added product
+function assignId() {
+
+    connection.query("SELECT item_id FROM products", function(error, response) {
+        if (error) throw error;
+
+        randomId = Math.floor(Math.random() * 10000);
+        var idValueArray = [];
+
+        for (i = 0; i < response.length; i++) {
+            idValueArray.push(response[i].item_id);
+        }
+        // console.log(randomId);
+        // console.log(idArray);
+        // console.log(Object.values(idArray));
+        // console.log(idValueArray);
+
+        if (idValueArray.includes(randomId)) {
+            // finishAddProduct(randomId);
+            assignId();
         }
 
-    ])
-    .then(function(response) {
-        if (response.confirmTest === true) {
-            connection.query("INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (1234, 'Tweezers', 'Target', 1.00, 50)", function(error, response) {
-                if (error) throw error;
-                console.log("Product Added!");
-            })
+        // else {
+        //     // assignId(idArray);
+        //     finishAddProduct(randomId);
+        // }
+        else {
+            return randomId;
         }
+       
     })
+    
 }
+
+function finishAddProduct(randomId) {
+    const INSERT = "INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (" 
+        randomId + ", " + response.addedProduct + ", " + response.productDepartment + ", " + parseInt(response.productPrice).toFixed(2) + ", " + parseInt(response.numberofProducts) + ")";
+        
+    connection.query(INSERT, function (error, response) {
+        if (error) throw error;
+
+        console.log(INSERT);
+        console.log("Product Added!");
+        connection.end();
+    })
+
+}
+
+// function testAdd() {
+//     inquirer.prompt([
+//         {
+//         type: "confirm",
+//         message: "Add test value?",
+//         name: "confirmTest",
+//         default: true
+//         }
+
+//     ])
+//     .then(function(response) {
+//         if (response.confirmTest === true) {
+
+//             // var idList;
+
+//             // response (idList) will be an array of objects.
+//             // These objects have one property: item_id
+//             // Essentially an array of item ids
+//             connection.query("SELECT item_id FROM products", function(error, response) {
+//                 if (error) throw error;
+//                 // console.log(response);
+//                 // idList = response;
+//             })
+
+//             // // console.log(idList);
+            
+
+
+
+
+
+
+//             connection.query("INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (1234, 'Tweezers', 'Target', 1.00, 50)", function(error, response) {
+//                 if (error) throw error;
+//                 console.log("Product Added!");
+//             })
+//         }
+//     })
+// }
 
 // function assignId() {
 
