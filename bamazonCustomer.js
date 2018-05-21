@@ -93,6 +93,7 @@ function itemNumberPrompt(product) {
 
         if (parseInt(response.userProductNumber) < 0) {
             console.log("Negative quantities are not valid!");
+            connection.end();
         }
 
         else {
