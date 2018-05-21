@@ -91,18 +91,26 @@ function itemNumberPrompt(product) {
     ])
     .then(function(response) {
 
-        // If the user asks for more items than are in stock, then...
-        if (response.userProductNumber > product.stock_quantity) {
-            console.log("Insufficient Quantity!");
-            connection.end();
+        if (parseInt(response.userProductNumber) < 0) {
+            console.log("Negative quantities are not valid!");
         }
 
         else {
-            
-            // Finishes making the user's order
-            fulfillOrder(product, response.userProductNumber);
+            // If the user asks for more items than are in stock, then...
+            if (response.userProductNumber > product.stock_quantity) {
+                console.log("Insufficient Quantity!");
+                connection.end();
+            }
+
+            else {
+                
+                // Finishes making the user's order
+                fulfillOrder(product, response.userProductNumber);
+            }
+
         }
 
+        
     })
 }
 
