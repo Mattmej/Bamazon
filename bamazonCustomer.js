@@ -39,7 +39,10 @@ function idPrompt() {
         {
             type: "input",
             message: "Enter the ID of the product you wish to buy.",
-            name: "userIdChoice"
+            name: "userIdChoice",
+            validate: function (name) {
+                return name !== "";
+            }
         }
 
     ])
@@ -48,18 +51,26 @@ function idPrompt() {
         // Selects all products which have the id the user enterd.
         connection.query("SELECT * FROM products WHERE item_id=" + response.userIdChoice, function(error, response2) {
             if (error) throw error;
-            console.log("\nItem Selected: " + Object.values(response2[0])[1]);
+            // console.log(response2);
+
+            if (response2.length === 0) {
+                console.log("Item not found!");
+                connection.end();
+            }
+            
     
-            // If the ID the user entered exists, then...
-            if (Object.values(response2[0]).includes(parseInt(response.userIdChoice))) {
+            // // If the ID the user entered exists, then...
+            // if (Object.values(response2[0]).includes(parseInt(response.userIdChoice))) {
+
+            //     // Asks the user how many items they would like to buy.
+            //     itemNumberPrompt(response2[0]);
+            // }
+    
+            else {
 
                 // Asks the user how many items they would like to buy.
                 itemNumberPrompt(response2[0]);
-            }
-    
-            else {
-                console.log("Item not found!");
-                connection.end();
+               
             }
         })
     })
@@ -72,7 +83,10 @@ function itemNumberPrompt(product) {
         {
             type: "input",
             message: "How many units would you like to buy?",
-            name: "userProductNumber"
+            name: "userProductNumber",
+            validate: function (name) {
+                return name !== "";
+            }
         }
     ])
     .then(function(response) {
