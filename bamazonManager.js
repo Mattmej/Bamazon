@@ -129,12 +129,22 @@ function restock(item_id) {
         }   
     ])
         .then(function (response) {
-            connection.query("UPDATE products SET stock_quantity=stock_quantity+" + parseInt(response.numberRestocked) + " WHERE item_id=" + parseInt(item_id), function (error, response2) {
-                if (error) throw error;
 
-                console.log("\n" + response.numberRestocked + " items added!");
+
+            if (parseInt(response.numberRestocked) < 0) {
+                console.log("Negative Values are not valid!");
                 connection.end();
-            })
+            }
+
+
+            else {
+                connection.query("UPDATE products SET stock_quantity=stock_quantity+" + parseInt(response.numberRestocked) + " WHERE item_id=" + parseInt(item_id), function (error, response2) {
+                    if (error) throw error;
+
+                    console.log("\n" + response.numberRestocked + " items added!");
+                    connection.end();
+                })
+            }
         })
 }
 
