@@ -132,8 +132,9 @@ function restock(item_id) {
 
 
             if (parseInt(response.numberRestocked) < 0) {
-                console.log("Negative Values are not valid!");
-                connection.end();
+                console.log("\nNegative values are not valid!\n");
+                // connection.end();
+                restock(item_id);
             }
 
 
@@ -189,8 +190,26 @@ function addNewProduct() {
     ])
         .then(function (response) {
 
-            // Assigns a random id to the added product, then finishes adding the item to the table.
-            assignId(response.addedProduct, response.numberOfProducts, response.productDepartment, response.productPrice);
+            // if (parseInt(response.numberOfProducts) < 0) {
+            //     console.log("Negative amounts are not valid!");
+            //     addNewProduct();
+            // }
+
+            // else if (parseInt(response.productPrice) < 0) {
+            //     console.log("Negative prices are not valid!");
+            //     addNewProduct();
+            // }
+
+            if (parseInt(response.numberOfProducts) < 0 || response.productPrice < 0) {
+                console.log("\nNegative values are not valid!\n");
+                addNewProduct();
+            }
+
+            else {
+
+                // Assigns a random id to the added product, then finishes adding the item to the table.
+                assignId(response.addedProduct, response.numberOfProducts, response.productDepartment, response.productPrice);
+            }
 
             
         })
